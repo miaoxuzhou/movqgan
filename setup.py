@@ -1,6 +1,6 @@
 import os
 import re
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(filename):
@@ -34,7 +34,7 @@ def get_links():
 
 def get_version():
     """ Get version from the package without actually importing it. """
-    init = read('rudolph/__init__.py')
+    init = read('movqgan/__init__.py')
     for line in init.split('\n'):
         if line.startswith('__version__'):
             return eval(line.split('=')[1])
@@ -43,9 +43,12 @@ def get_version():
 setup(
     name='movqgan',
     version=get_version(),
-    author='SberAI',
-    maintainer='Miao Xuzhou',
-    packages=find_packages(exclude=['tests', 'tests.*', 'configs', 'checkpoints', 'dataset']),
+    author='miaoxuzhou',
+    packages=find_packages(
+        where='.',
+        include=['movqgan*'],
+        exclude=['configs*'],
+    ),
     install_requires=get_requirements(),
     dependency_links=get_links(),
 )

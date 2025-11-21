@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from movqgan.losses.perceptual import ReconstructionLoss, PerceptualLoss
-from movqgan.losses.adversarial import AdversarialLoss
+from .perceptual import ReconstructionLoss, PerceptualLoss
+from .adversarial import AdversarialLoss
 from movqgan.modules.discriminator.discriminator import NLayerDiscriminator, weights_init
 
 class VQGANLoss(nn.Module):

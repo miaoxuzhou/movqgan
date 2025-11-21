@@ -1,3 +1,5 @@
+# movqgan/losses/__init__.py
+
 from .adversarial import AdversarialLoss, hinge_d_loss, vanilla_d_loss
 from .perceptual import ReconstructionLoss, PerceptualLoss
 from .vqgan_loss import VQGANLoss

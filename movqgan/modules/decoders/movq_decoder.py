@@ -3,10 +3,10 @@ import torch
 import torch.nn as nn
 from typing import Tuple, Optional
 
-from movqgan.modules.components.attention import SpatialAttnBlock
-from movqgan.modules.components.residual import SpatialResnetBlock, nonlinearity, get_timestep_embedding
-from movqgan.modules.components.sampling import Upsample
-from movqgan.modules.components.normalization import SpatialNorm
+from ..components.attention import SpatialAttnBlock
+from ..components.residual import SpatialResnetBlock, nonlinearity, get_timestep_embedding
+from ..components.sampling import Upsample
+from ..components.normalization import SpatialNorm
 
 class MOVQDecoder(nn.Module):
     def __init__(

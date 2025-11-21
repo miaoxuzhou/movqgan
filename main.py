@@ -3,8 +3,9 @@ import pytorch_lightning as pl
 from omegaconf import OmegaConf
 from argparse import ArgumentParser
 
-from movqgan.data.dataset import LightningDataModule
-from movqgan.util import instantiate_from_config
+from .data.dataset import LightningDataModule
+from .util import instantiate_from_config
+
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers import WandbLogger
 
