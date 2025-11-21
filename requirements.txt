@@ -1,0 +1,8 @@
+torch
+torchvision
+pytorch_lightning
+omegaconf
+einops
+fsspec
+wandb
+transformers

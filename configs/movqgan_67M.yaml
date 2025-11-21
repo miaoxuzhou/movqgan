@@ -1,0 +1,79 @@
+# Training configuration for MoVQGAN 67M model
+
+# Checkpoint path - empty string means train from scratch
+ckpt_path: ''
+
+# Weights & Biases project name for logging
+wandb_entity_name: 'miao_xuzhou_notes'
+wandb_project_name: 'movqgan-67M'
+
+# PyTorch Lightning Trainer configuration
+trainer:
+  log_every_n_steps: 10              # Log metrics every N steps
+  precision: 16                      # Training precision (16-bit float)
+  num_nodes: 1                       # Number of compute nodes
+  accelerator: 'gpu'                 # Use GPU acceleration
+  strategy: 'ddp_find_unused_parameters_true'
+                                     # Distributed Data Parallel strategy
+  devices: 4                         # Number of GPUs to use
+  max_steps: 9999999                 # Maximum training steps
+
+# Model checkpoint callback configuration
+ModelCheckpoint:
+  dirpath: './checkpoints/movqgan_67M'    # Checkpoint save directory
+  filename: "step_{step:07d}"             # Checkpoint filename pattern
+  save_top_k: -1                          # Save all checkpoints (-1 = save all)
+  every_n_train_steps: 5000               # Save checkpoint every N steps
+  save_last: true                         # Also save the last checkpoint
+
+# Model configuration
+model:
+  target: movqgan.models.movq.MOVQ    # Model class path
+  params:
+    learning_rate: 0.0001             # Adam optimizer learning rate
+    ema_decay: 0.9999                 # Exponential moving average decay
+    embed_dim: 4                      # Codebook embedding dimension
+    n_embed: 16384                    # Codebook size (number of codes)
+    monitor: val/rec_loss             # Metric to monitor for checkpointing
+    
+    # Encoder/Decoder configuration
+    ddconfig:
+      double_z: false                 # Don't output mean+variance (not VAE)
+      z_channels: 4                   # Latent space channels
+      resolution: 256                 # Input image resolution
+      in_channels: 3                  # Input channels (RGB)
+      out_ch: 3                       # Output channels (RGB)
+      ch: 128                         # Base channel count
+      ch_mult: [1, 2, 2, 4]          # Channel multipliers per resolution
+      num_res_blocks: 2               # Residual blocks per resolution
+      attn_resolutions: [32]          # Resolutions to apply attention
+      dropout: 0.0                    # Dropout probability
+    
+    # Loss function configuration
+    lossconfig:
+      target: movqgan.losses.vqgan_loss.VQGANLoss   # Loss class path
+      params:
+        disc_conditional: false       # Discriminator not conditioned
+        disc_in_channels: 3           # Discriminator input channels
+        disc_num_layers: 2            # Discriminator depth
+        disc_start: 1                 # Start discriminator after N steps
+        disc_weight: 0.8              # Discriminator loss weight
+        codebook_weight: 1.0          # Codebook loss weight
+        perceptual_weight: 1.0        # Perceptual loss weight (LPIPS)
+        
+# Data configuration
+data:
+  train:
+    df_path: ../FFHQ/ffhq_dataset.csv # Path to dataset CSV file
+    image_size: 256                   # Input image size
+    batch_size: 4                     # Batch size per GPU
+    shuffle: true                     # Shuffle data each epoch
+    num_workers: 12                   # Data loading workers
+  
+  # Optional: validation data configuration
+  # val:
+  #   df_path: ./val_dataset.csv
+  #   image_size: 256
+  #   batch_size: 8
+  #   shuffle: false
+  #   num_workers: 4

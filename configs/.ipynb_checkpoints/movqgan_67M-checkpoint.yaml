@@ -1,0 +1,66 @@
+# 检查点保存路径，如果为空，则从零开始训练
+ckpt_path: ''
+
+# WANDB 实体名称和项目名称
+wandb_entity_name: 'miao_xuzhou_notes'
+wandb_project_name: 'movq'
+
+trainer:
+  log_every_n_steps: 10             # 日志记录间隔，每10步记录一次
+  precision: 16                     # 计算精度，表示 float16
+  num_nodes: 1                      # 使用的计算节点数量，表示单节点训练
+  accelerator: 'gpu'                # 使用 GPU 进行训练
+  strategy: 'ddp_find_unused_parameters_true'
+                                    # 分布式数据并行策略，即 Distributed Data Parallel
+  devices: 4                        # 使用的 GPU 数量，1 表示使用1个GPU
+  max_steps: 9999999                # 最大训练步数
+
+ModelCheckpoint:
+  dirpath: './all_saves/movq_f8_67M'   # 保存路径
+  filename: "{step}-model"             # 文件名
+  save_top_k: -1                       # 保存所有检查点
+  every_n_train_steps: 5000            # 每5000步保存一次
+
+model:
+  target: movqgan.models.vqgan.MOVQ
+  params:
+    learning_rate: 0.0001
+    ema_decay: 0.9999
+    embed_dim: 4
+    n_embed: 16384
+    monitor: val/rec_loss
+    ddconfig:
+      double_z: false
+      z_channels: 4
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128                # 基础通道数
+      ch_mult:               # 通道倍增列表
+      - 1
+      - 2
+      - 2
+      - 4
+      num_res_blocks: 2      # 每个分辨率下的 ResidualStack 数量
+      attn_resolutions:
+      - 32
+      dropout: 0.0
+    lossconfig:
+      target: movqgan.modules.losses.vqperceptual.VQLPIPSWithDiscriminator2
+      params:
+        disc_conditional: false
+        disc_in_channels: 3
+        disc_num_layers: 2
+        disc_start: 1
+        disc_weight: 0.8
+        codebook_weight: 1.0
+
+        
+data:
+  train:
+    # 数据集文件的路径
+    df_path: ../FFHQ/ffhq_dataset.csv
+    image_size: 256          # 输入图像尺寸
+    batch_size: 12           # 每个批次的样本数量
+    shuffle: true            # 是否在每个 epoch 打乱样本顺序
+    num_workers: 12          # 用于数据加载的子进程数量，通常是 CPU 核心数的二分之一
