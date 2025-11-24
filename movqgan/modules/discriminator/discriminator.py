@@ -1,7 +1,7 @@
 import functools
 import torch.nn as nn
 
-from movqgan.modules.components.normalization import ActNorm
+from ..components.normalization import ActNorm
 
 # 权重初始化函数
 def weights_init(m):

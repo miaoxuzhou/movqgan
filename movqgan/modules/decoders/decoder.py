@@ -3,9 +3,9 @@ import torch
 import torch.nn as nn
 from typing import Tuple, Optional
 
-from movqgan.modules.components.attention import AttnBlock
-from movqgan.modules.components.residual import ResnetBlock, Normalize, nonlinearity, get_timestep_embedding
-from movqgan.modules.components.sampling import Upsample
+from ..components.attention import AttnBlock
+from ..components.residual import ResnetBlock, Normalize, nonlinearity, get_timestep_embedding
+from ..components.sampling import Upsample
 
 class Decoder(nn.Module):
     def __init__(

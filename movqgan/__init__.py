@@ -2,7 +2,7 @@ import os
 import torch
 
 try:
-    from huggingface_hub import hf_hub_url, cached_download
+    from huggingface_hub import hf_hub_download
     HF_HUB_AVAILABLE = True
 except ImportError:
     HF_HUB_AVAILABLE = False
@@ -153,15 +153,10 @@ def get_movqgan_model(
         cache_dir = os.path.join(cache_dir, name)
         os.makedirs(cache_dir, exist_ok=True)
 
-        config_file_url = hf_hub_url(
+        checkpoint_path = hf_hub_download(
             repo_id=config['repo_id'], 
-            filename=config['filename']
-        )
-
-        checkpoint_path = cached_download(
-            config_file_url, 
+            filename=config['filename'],
             cache_dir=cache_dir, 
-            force_filename=config['filename']
         )
 
         # Load checkpoint

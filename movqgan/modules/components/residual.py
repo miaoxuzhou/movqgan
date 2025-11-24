@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 from typing import Optional
 
-from movqgan.modules.components.normalization import Normalize, SpatialNorm
+from .normalization import Normalize, SpatialNorm
 
 
 def nonlinearity(x: torch.Tensor) -> torch.Tensor:

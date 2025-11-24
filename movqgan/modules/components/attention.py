@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from typing import Optional
-from movqgan.modules.components.normalization import Normalize, SpatialNorm
+from .normalization import Normalize, SpatialNorm
 
 class AttnBlock(nn.Module):
     """
