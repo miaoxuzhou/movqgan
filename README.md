@@ -1,6 +1,6 @@
 # MoVQGAN: 
 
-调整了 MoVQGAN 原代码(https://github.com/ai-forever/MoVQGAN)的结构，主要调整如下：
+调整了 MoVQGAN 原代码 (https://github.com/ai-forever/MoVQGAN) 的结构，主要调整如下：
 
 1. **模块化损失函数**：独立计算每种损失.
 2. **设计VQ模型基类**：原代码中的 VQ、MoVQ 存在大量重复代码，提供了统一的基类.
